@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.guto157.zeradivida",
+    "sha256_cert_fingerprints": ["4E:02:CA:4F:4F:2B:7A:32:D1:C7:14:7F:7F:67:82:19:07:D6:E4:8A:1A:5F:87:8C:33:59:9B:0A:F6:E2:6F"]
+  }
+}]
