@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garimpador Guto</title>
+<style>
+body{font-family:Arial;background:#FFF6F3;margin:0;padding:12px}
+.top{background:#ee4d2d;color:#fff;padding:14px;border-radius:12px;text-align:center}
+.card{background:#fff;border-radius:12px;padding:12px;margin:12px 0;display:flex;gap:10px;border:1px solid #eee}
+.price{color:#ee4d2d;font-weight:bold;font-size:18px}
+.btn{background:#ee4d2d;color:#fff;border:0;padding:12px;border-radius:8px;width:100%;font-weight:bold;margin-top:6px}
+.btn2{background:#25D366;color:#fff;border:0;padding:12px;border-radius:8px;width:100%;font-weight:bold;margin-top:6px}
+input{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;box-sizing:border-box}
+.badge{background:#ffe9e3;color:#ee4d2d;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:bold}
+</style>
+</head>
+<body>
+<div class="top">
+<h2>🔥 GARIMPADOR DO GUTO 🔥</h2>
+<small>ID: 6L5a0yKW4X</small>
+</div>
+
+<div style="background:#fff;padding:12px;border-radius:12px;margin-top:12px;border:1px solid #eee">
+<b>Cole link de QUALQUER produto Shopee:</b>
+<input id="prod" placeholder="https://shopee.com.br/...">
+<button class="btn" onclick="gerar()">GERAR E COPIAR MEU LINK AFILIADO</button>
+<div id="box" style="display:none;margin-top:10px">
+<input id="out" readonly>
+<button class="btn" onclick="copy('out')">📋 COPIAR LINK AFILIADO</button>
+<button class="btn2" onclick="copyZap()">📱 COPIAR TEXTO P/ ZAP</button>
+<p id="zaptext" style="font-size:13px;background:#f5f5f5;padding:8px;border-radius:8px;white-space:pre-wrap"></p>
+</div>
+</div>
+
+<h3>💣 Mais Vendidos Hoje</h3>
+
+<div class="card">
+<div style="flex:1">
+<span class="badge">+8.2k vendidos | -60%</span><br>
+<b>Fone Bluetooth TWS Original - R$29,90</b><br>
+<button class="btn" onclick="usar('🔥 Fone Bluetooth TWS por R$29,90 (de R$129) - 8mil vendidos!')">📋 COPIAR COM MEU ID</button>
+</div>
+</div>
+
+<div class="card">
+<div style="flex:1">
+<span class="badge">+5.5k vendidos | -45%</span><br>
+<b>Smartwatch D20 Ultra - R$69,90</b><br>
+<button class="btn" onclick="usar('⌚ Smartwatch D20 por R$69,90 - Mais vendido!')">📋 COPIAR COM MEU ID</button>
+</div>
+</div>
+
+<script>
+const MEU_LINK = "https://s.shopee.com.br/6L5a0yKW4X";
+function gerar(){
+ let p=document.getElementById('prod').value.trim();
+ if(!p){alert('Cole o link');return}
+ mostrar(MEU_LINK, "🔥 Achadinho que tá bombando!");
+}
+function usar(titulo){ mostrar(MEU_LINK, titulo); }
+function mostrar(link, titulo){
+ document.getElementById('box').style.display='block';
+ document.getElementById('out').value=link;
+ let texto = titulo + "\n\n👉 " + link + "\n\n✅ Frete Grátis\n✅ 4.9 estrelas\n✅ Entrega Rápida";
+ document.getElementById('zaptext').innerText=texto;
+ window._zaptexto = texto;
+ copy('out');
+ window.scrollTo(0,0);
+}
+function copy(id){
+ let el=document.getElementById(id);
+ el.select(); document.execCommand('copy');
+ alert('✅ COPIADO! Seu ID 6L5a0yKW4X já está no link');
+}
+function copyZap(){
+ navigator.clipboard.writeText(window._zaptexto);
+ alert('Texto pronto pro WhatsApp copiado!');
+}
+</script>
+</body>
+</html>
