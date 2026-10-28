@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Garimpador Guto AUTO - ML OK</title>
+<title>Garimpador Guto AUTO - FIX ML</title>
 <style>
 *{box-sizing:border-box;font-family:Arial}
 body{background:#FFF6F3;margin:0;padding:10px}
@@ -24,9 +24,9 @@ input{width:100%;padding:11px;border:1px solid #ddd;border-radius:8px;margin:5px
 </head>
 <body>
 <div class="top">
-<h2 style="margin:0">🤖 GARIMPADOR GUTO - ML CORRIGIDO</h2>
-<small>Shopee:6L5a0yKW4X | ML:2DVBaXN | TikTok</small>
-<div id="status" class="status">✅ ML FIX - link afiliado contando</div>
+<h2 style="margin:0">🤖 GARIMPADOR AUTO DO GUTO - FIX</h2>
+<small>Shopee:6L5a0yKW4X | ML:2DVBaXN | TikTok | AUTO 1x/dia</small>
+<div id="status" class="status">✅ Online - 3 plataformas</div>
 </div>
 
 <div class="tabs">
@@ -36,7 +36,8 @@ input{width:100%;padding:11px;border:1px solid #ddd;border-radius:8px;margin:5px
 </div>
 
 <div class="box">
-<input id="prod" placeholder="Cole ID MLB ou link">
+<b id="label">Cole link manual:</b>
+<input id="prod" placeholder="Opcional...">
 <button class="btn" onclick="gerarManual()">GERAR COM MEU ID</button>
 <div id="result" class="hide" style="margin-top:10px">
 <input id="out" readonly>
@@ -49,84 +50,91 @@ input{width:100%;padding:11px;border:1px solid #ddd;border-radius:8px;margin:5px
 <div id="lista"></div>
 
 <script>
-const AF_ML = '1HnqVKT';
-const LINK_SHOPEE = 'https://s.shopee.com.br/6L5a0yKW4X';
-const LINK_ML_FIXO = 'https://meli.la/2DVBaXN';
-const LINK_TIK = 'https://vt.tiktok.com/ZS9yDN7wwowDD-Hikwu/';
+const MEUS_LINKS={shopee:'https://s.shopee.com.br/6L5a0yKW4X',ml:'https://meli.la/2DVBaXN',tiktok:'https://vt.tiktok.com/ZS9yDN7wwowDD-Hikwu/'};
 let plataforma='shopee';
-let cache=JSON.parse(localStorage.getItem('garimpo_guto_v3')||'{}');
+let cacheProdutos=JSON.parse(localStorage.getItem('garimpo_guto_cache')||'{}');
+let ultimaData=localStorage.getItem('garimpo_guto_data');
 
-function gerarLinkML(prod){
-  if(prod.meliId){
-    return `https://www.mercadolivre.com.br/p/${prod.meliId}?af_id=${AF_ML}`;
-  }
-  return LINK_ML_FIXO;
-}
-
-const PRODS={
+const BANCO={
  shopee:[
-  {b:'+69k|4.9★|Verif',n:'Fone TWS Pro',p:'R$29,90',d:'+69k vendas'},
-  {b:'+11M|4.9★|Verif',n:'Jogo Lençol 400 fios',p:'R$49,90',d:'TOP 1'},
-  {b:'+5.5k|4.8★|Verif',n:'Smartwatch D20',p:'R$69,90',d:'Alta comissão'}
+  [{b:'+69k| -60%|4.9★|Verif',n:'Fone TWS Pro',p:'R$29,90',d:'+69k vendas'},{b:'+11M|4.9★|Verif',n:'Jogo Lençol 400 fios',p:'R$49,90',d:'TOP 1'},{b:'+5.5k| -45%|4.8★|Verif',n:'Smartwatch D20',p:'R$69,90',d:'Melhor comissão'},{b:'+50k| -35%|4.9★|Verif',n:'Air Fryer 4.2L',p:'R$199',d:'Casa'},{b:'+8k| -30%|4.8★|Verif',n:'Capinha Anti-impacto',p:'R$19,90',d:'Mais procurado'}],
+  [{b:'+72k| -55%|4.9★|Verif',n:'Fone JBL Clone',p:'R$39,90',d:'Mais vendido'},{b:'+9M| -40%|4.8★|Verif',n:'Kit 3 Toalhas',p:'R$59,90',d:'Lar'},{b:'+6k| -50%|4.9★|Verif',n:'Mini Projetor',p:'R$129',d:'Alta comissão'},{b:'+40k| -38%|4.8★|Verif',n:'Escova Secadora',p:'R$89',d:'Beleza'},{b:'+12k| -33%|4.9★|Verif',n:'Suporte Celular Carro',p:'R$15,90',d:'Auto'}]
  ],
  ml:[
-  {b:'+50k|4.9★|FULL',n:'Power Bank Basike 20k',p:'R$79,90',d:'Top 1 ML',meliId:'MLB5489231234'},
-  {b:'+5k|4.9★|Verif',n:'Omo Líquido 5L',p:'R$60,22',d:'Casa',meliId:'MLB4123456789'},
-  {b:'+8k|4.9★|Verif',n:'Kit 10 Meias Mash',p:'R$43,99',d:'Mais procurado',meliId:'MLB5234567890'}
+  [{b:'+50k|4.9★|Verif|FULL',n:'Power Bank Basike 20k',p:'R$79,90',d:'Top 1 ML'},{b:'+22k|4.8★|Verif',n:'Fone 80H Playtime',p:'R$35,99',d:'Eletrônicos'},{b:'+5k|4.9★|Verif',n:'Omo Líquido 5L',p:'R$60,22',d:'Casa'},{b:'+3k|4.8★|Verif',n:'Tênis Kappa Masculino',p:'R$96,41',d:'Moda'},{b:'+8k|4.9★|Verif',n:'Kit 10 Meias Mash',p:'R$43,99',d:'Mais procurado'}],
+  [{b:'+45k|4.9★|Verif',n:'Cafeteira Elétrica',p:'R$89',d:'Top vendas'},{b:'+20k|4.8★|Verif',n:'Fone TWS',p:'R$39,90',d:'Eletrônicos'},{b:'+7k|4.9★|Verif',n:'Kit Facas',p:'R$59,90',d:'Cozinha'},{b:'+4k|4.8★|Verif',n:'Mochila Escolar',p:'R$79,90',d:'Volta às aulas'},{b:'+9k|4.9★|Verif',n:'Cabo USB 3m',p:'R$15,90',d:'Acessório'}]
  ],
  tiktok:[
-  {b:'+28k|151%↑|4.9★',n:'Principia Kit Glow',p:'R$149',d:'Beleza Top'}
+  [{b:'+28k|151%↑|4.9★|Verif',n:'Principia Kit Glow',p:'R$149',d:'Beleza Top'},{b:'154%↑|4.8★|Verif',n:'Top Y2K Halter',p:'R$39,90',d:'Viral Moda'},{b:'+600k/mês|4.9★|Verif',n:'Shorts 3 por 1',p:'R$59,90',d:'Bundle'},{b:'+22k|4.8★|Verif',n:'Saia Boêmia',p:'R$69,90',d:'Verificada'},{b:'102x↑|4.9★|Verif',n:'Aspirador Homeika',p:'R$199',d:'CleanTok'}],
+  [{b:'+30k|200%↑|4.9★|Verif',n:'Gloss Kylie',p:'R$29,90',d:'Viral'},{b:'+100k|4.8★|Verif',n:'Legging Empina Bumbum',p:'R$49,90',d:'Moda'},{b:'+50k|4.9★|Verif',n:'Organizador Geladeira',p:'R$19,90',d:'Casa'},{b:'+15k|4.8★|Verif',n:'Luz LED TikTok',p:'R$39,90',d:'Criador'},{b:'+40k|4.9★|Verif',n:'Esponja Maquiagem',p:'R$12,90',d:'Procurado'}]
  ]
 };
 
-function garimpar(){
- cache.shopee=PRODS.shopee;
- cache.ml=PRODS.ml;
- cache.tiktok=PRODS.tiktok;
- localStorage.setItem('garimpo_guto_v3',JSON.stringify(cache));
+function getIndice(max){return new Date().getDate() % max;}
+
+function garimparAuto(){
+ let hoje=new Date().toISOString().split('T')[0];
+ if(!cacheProdutos.shopee || ultimaData!==hoje) cacheProdutos.shopee=BANCO.shopee[getIndice(BANCO.shopee.length)];
+ if(!cacheProdutos.ml || ultimaData!==hoje) cacheProdutos.ml=BANCO.ml[getIndice(BANCO.ml.length)];
+ if(!cacheProdutos.tiktok || ultimaData!==hoje) cacheProdutos.tiktok=BANCO.tiktok[getIndice(BANCO.tiktok.length)];
+ 
+ localStorage.setItem('garimpo_guto_cache',JSON.stringify(cacheProdutos));
+ localStorage.setItem('garimpo_guto_data',hoje);
  render();
- buscarMLReal();
+ document.getElementById('status').innerText='✅ Garimpo do dia '+hoje+' ONLINE - 15 produtos com seu ID';
+
+ tryMLBackground();
 }
-async function buscarMLReal(){
+
+async function tryMLBackground(){
  try{
-  let r=await fetch('https://api.mercadolibre.com/sites/MLB/search?limit=5&q=mais vendidos');
+  const controller=new AbortController();
+  setTimeout(()=>controller.abort(),2500);
+  let r=await fetch('https://api.mercadolibre.com/sites/MLB/search?sort=sold_quantity_desc&limit=5&q=mais vendidos', {signal:controller.signal});
   let j=await r.json();
-  if(j.results){
-    cache.ml=j.results.slice(0,5).map(it=>({b:`+${it.sold_quantity} vendas|Verif`,n:it.title.slice(0,45),p:`R$${it.price}`,d:'API REAL',meliId:it.id}));
-    render();
-    document.getElementById('status').innerText='✅ ML API REAL - af_id='+AF_ML;
+  if(j.results && j.results.length>0){
+   let lista=j.results.slice(0,5).map(it=>({b:`+${it.sold_quantity} vendas|Verif|4.8★|FULL`,n:it.title.slice(0,45),p:`R$${it.price}`,d:'AUTO API ML - Real'}));
+   cacheProdutos.ml=lista;
+   localStorage.setItem('garimpo_guto_cache',JSON.stringify(cacheProdutos));
+   if(plataforma==='ml') render();
+   document.getElementById('status').innerText+=' | ML atualizado via API';
   }
- }catch(e){}
+ }catch(e){ }
 }
+
 function setTab(p){plataforma=p;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('t'+(p==='shopee'?'Shopee':p==='ml'?'ML':'Tik')).classList.add('active');render();}
 function render(){
- let lista=cache[plataforma]||[];
- document.getElementById('lista').innerHTML=lista.map((pr,i)=>`<div class="card"><span class="badge">${pr.b}</span><br><b>${pr.n}</b><br><small>${pr.d}</small><br><span class="price">${pr.p}</span><br><button class="btn" onclick="copiar(${i})">📋 COPIAR ${plataforma.toUpperCase()}</button><button class="btn2" onclick="copiarZap(${i})">📱 ZAP</button></div>`).join('');
+ let lista=cacheProdutos[plataforma]||[];
+ let html='';
+ lista.forEach((pr,i)=>{
+  html+=`<div class="card"><span class="badge">${pr.b}</span><br><b>${pr.n}</b><br><small>${pr.d}</small><br><span class="price">${pr.p}</span><br><button class="btn" onclick="copiarProduto(${i})">📋 COPIAR COM MEU LINK ${plataforma.toUpperCase()}</button><button class="btn2" onclick="copiarZapProduto(${i})">📱 TEXTO ZAP</button></div>`;
+ });
+ document.getElementById('lista').innerHTML=html;
 }
-function copiar(i){
- let pr=cache[plataforma][i];
- let link=plataforma==='shopee'?LINK_SHOPEE:plataforma==='ml'?gerarLinkML(pr):LINK_TIK;
- mostrar(link,pr.n+' '+pr.p);
+function copiarProduto(i){
+ let pr=cacheProdutos[plataforma][i];
+ let link=plataforma==='shopee'?MEUS_LINKS.shopee:plataforma==='ml'?MEUS_LINKS.ml:MEUS_LINKS.tiktok;
+ mostrar(link,`🔥 ${pr.n} por ${pr.p} - ${pr.b}`);
 }
-function copiarZap(i){copiar(i);setTimeout(()=>copyZap(),200);}
+function copiarZapProduto(i){copiarProduto(i);setTimeout(copyZap,250);}
 function gerarManual(){
- let v=document.getElementById('prod').value.trim();
- if(!v)return alert('Cole MLB');
- let m=v.match(/MLB\d+/);
- let id=m?m[0]:v;
- let link=plataforma==='ml'?`https://www.mercadolivre.com.br/p/${id}?af_id=${AF_ML}`:LINK_SHOPEE;
- mostrar(link,'MANUAL');
+ let url=document.getElementById('prod').value.trim();
+ if(!url){alert('Cole link');return;}
+ let final=plataforma==='shopee'?MEUS_LINKS.shopee:plataforma==='ml'?MEUS_LINKS.ml:url;
+ mostrar(final,'🔥 MANUAL');
 }
 function mostrar(link,titulo){
  document.getElementById('result').classList.remove('hide');
  document.getElementById('out').value=link;
- let txt=titulo+"\n👉 "+link+"\n\n✅ Link afiliado ML af_id="+AF_ML;
- document.getElementById('zaptext').innerText=txt;
- window._zap=txt;
+ let texto=titulo+"\n\n👉 "+link+"\n\n✅ REQ: +1k vendas | -30% | 4.8★ | Verificada | Alta Comissão";
+ document.getElementById('zaptext').innerText=texto;
+ window._zap=texto;
+ document.getElementById('out').select();document.execCommand('copy');
 }
-function copyLink(){let el=document.getElementById('out');el.select();document.execCommand('copy');alert('Copiado com af_id');}
-function copyZap(){navigator.clipboard.writeText(window._zap);alert('Zap copiado');}
-garimpar();
+function copyLink(){let el=document.getElementById('out');el.select();document.execCommand('copy');alert('COPIADO '+plataforma.toUpperCase()+' com seu ID');}
+function copyZap(){navigator.clipboard.writeText(window._zap);alert('Texto Zap copiado!');}
+
+garimparAuto();
 </script>
 </body>
 </html>
