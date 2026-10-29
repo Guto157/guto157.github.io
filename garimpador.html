@@ -1,162 +1,91 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Garimpador Guto v7 FINAL</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garimpador v8 - 3 Plataformas</title>
 <style>
-*{box-sizing:border-box;font-family:Arial, sans-serif}
-body{background:#FFF6F3;margin:0;padding:10px}
-.top{background:linear-gradient(90deg,#ffe600,#ffcc00);color:#000;padding:14px;border-radius:12px;text-align:center;font-weight:bold}
-.tabs{display:flex;gap:6px;margin:12px 0 6px 0}
-.tab{flex:1;padding:12px;border-radius:8px;border:1px solid #ddd;background:#fff;font-weight:bold;cursor:pointer;text-align:center}
-.tab.active{background:#ee4d2d;color:#fff;border-color:#ee4d2d}
-.search-container{margin-bottom:12px}
-.search-input{width:100%;padding:12px;border-radius:8px;border:1px solid #ddd;font-size:15px;outline:none}
-.search-input:focus{border-color:#ee4d2d}
-.card{background:#fff;border-radius:12px;padding:12px;margin:10px 0;border:1px solid #eee}
-.badge{background:#ffe9e3;color:#ee4d2d;padding:3px 7px;border-radius:4px;font-size:11px;font-weight:bold}
-.price{color:#ee4d2d;font-weight:bold;font-size:16px}
-.btn{background:#ee4d2d;color:#fff;border:0;padding:12px;border-radius:8px;width:100%;font-weight:bold;margin-top:6px;cursor:pointer}
-.btn2{background:#25D366;color:#fff;border:0;padding:11px;border-radius:8px;width:100%;font-weight:bold;margin-top:6px;cursor:pointer}
-small{word-break:break-all}
+*{box-sizing:border-box;font-family:Arial}body{background:#0f0f0f;color:#fff;margin:0;padding:10px}
+.header{background:#ff2d55;padding:15px;border-radius:12px;text-align:center;font-weight:bold;font-size:18px}
+.config{background:#1e1e1e;padding:12px;border-radius:12px;margin:12px 0;border:1px solid #333}
+.config input{width:100%;padding:10px;margin:5px 0;border-radius:8px;border:1px solid #333;background:#000;color:#fff}
+.tabs{display:flex;gap:6px;margin:10px 0}.tab{flex:1;padding:12px;border-radius:10px;background:#1e1e1e;text-align:center;font-weight:bold;cursor:pointer}
+.tab.active{background:#ff2d55}.card{background:#1e1e1e;border-radius:12px;padding:12px;margin:10px 0;border:1px solid #333}
+.badge{background:#00c851;color:#fff;padding:3px 6px;border-radius:4px;font-size:11px;font-weight:bold}
+.price{color:#00ff88;font-weight:bold;font-size:16px}.btn{width:100%;padding:12px;border-radius:8px;border:0;font-weight:bold;margin-top:6px;cursor:pointer}
+.btn-ml{background:#ffe600;color:#000}.btn-shopee{background:#ee4d2d;color:#fff}.btn-tiktok{background:#000;color:#fff;border:1px solid #fff}
+small{color:#aaa;word-break:break-all}
 </style>
 </head>
 <body>
+<div class="header">🤖 GARIMPADOR AUTOMÁTICO v8<br><small>TOP VENDAS + ALTA COMISSÃO</small></div>
 
-<div class="top">🤖 GARIMPADOR GUTO v7 FINAL<br><small>ID CORRETO: 2DVBaXN | Shopee separada</small></div>
+<div class="config">
+<b>⚙️ SEUS IDs DE AFILIADO (edita uma vez só):</b><br>
+ML af_id: <input id="mlid" value="2DVBaXN">
+Shopee ID: <input id="shopeeid" value="6L5a0yKW4X">
+TikTok Shop ID: <input id="tiktokid" value="SEU_ID_TIKTOK_AQUI">
+<button class="btn" style="background:#00c851;color:#fff" onclick="salvar()">💾 SALVAR IDs</button>
+</div>
 
 <div class="tabs">
-<div class="tab active" id="tabML" onclick="setTab('ml')">🟡 ML</div>
-<div class="tab" id="tabShopee" onclick="setTab('shopee')">🟠 Shopee</div>
-<div class="tab" id="tabTikTok" onclick="setTab('tiktok')">⚫ TikTok</div>
+<div class="tab active" id="tML" onclick="setTab('ml')">🟡 ML</div>
+<div class="tab" id="tShopee" onclick="setTab('shopee')">🟠 Shopee</div>
+<div class="tab" id="tTiktok" onclick="setTab('tiktok')">⚫ TikTok</div>
 </div>
-
-<div class="search-container">
-<input type="text" id="busca" class="search-input" placeholder="🔍 Buscar produto pelo nome..." oninput="render()">
-</div>
-
 <div id="lista"></div>
 
 <script>
-// ========= EDITA SÓ AQUI SE PRECISAR =========
-const ML_AF_ID = '2DVBaXN'; // SEU ID VERDADEIRO ML
-const SHOPEE_ID = '6L5a0yKW4X'; // Shopee já certo
-const TIKTOK_ID = 'guto_garimpo'; // ID TikTok
-// =============================================
+let mlid = localStorage.getItem('mlid') || '2DVBaXN';
+let shopeeid = localStorage.getItem('shopeeid') || '6L5a0yKW4X';
+let tiktokid = localStorage.getItem('tiktokid') || '';
+document.getElementById('mlid').value = mlid;
+document.getElementById('shopeeid').value = shopeeid;
+document.getElementById('tiktokid').value = tiktokid;
 
-// 5 Produtos Campeões com Links Oficiais Estáveis do Mercado Livre
-const PRODUTOS_ML = [
- {b:'+50k vendas | 4.9★', n:'Sabão Líquido Omo Lavagem Perfeita 5L', p:'R$60,22', link:'https://mercadolivre.com.br'},
- {b:'+20k vendas | 4.8★', n:'Carregador Portátil Power Bank Basike 20000mAh', p:'R$79,90', link:'https://mercadolivre.com.br'},
- {b:'+10k vendas | 4.9★', n:'Kit 10 Meias Mash Masculina Original Algodão', p:'R$43,99', link:'https://mercadolivre.com.br'},
- {b:'+5k vendas | 4.9★', n:'Tênis Kappa Pulse Masculino Original Correr', p:'R$96,41', link:'https://mercadolivre.com.br'},
- {b:'+15k vendas | 4.8★', n:'Creme Hidratante CeraVe Pele Seca a Extra Seca 473ml', p:'R$89,90', link:'https://mercadolivre.com.br'}
-];
-
-// 5 Produtos Campeões com Links Oficiais de Redirecionamento da Shopee
-const PRODUTOS_SHOPEE = [
- {b:'+69k vendas | Alta Comissão', n:'Fone Bluetooth TWS Pro com Case de Carregamento', p:'R$29,90', link:'https://shopee.com.br'},
- {b:'+28k vendas | 4.9★', n:'Principia Kit Glow - Sérum Clareador Facial Anti-Manchas', p:'R$149,00', link:'https://shopee.com.br'},
- {b:'+40k vendas | Top 1', n:'Mini Processador de Alimentos Elétrico Recarregável USB', p:'R$19,50', link:'https://shopee.com.br'},
- {b:'+15k vendas | 4.8★', n:'Relógio Inteligente Smartwatch D20 Bluetooth Monitor', p:'R$24,90', link:'https://shopee.com.br'},
- {b:'+30k vendas | Viral', n:'Máscara de Cílios Tridimensional À Prova D\'água', p:'R$14,80', link:'https://shopee.com.br'}
-];
-
-// 5 Produtos que Mais Viralizam e Vendem no TikTok Shop (Links Promocionais Limpos)
-const PRODUTOS_TIKTOK = [
- {b:'Tendência Absoluta | Alta Comissão', n:'Microfone de Lapela Sem Fio para Celular Tipo-C/iPhone', p:'R$35,90', link:'https://tiktok.com'},
- {b:'Viralizador de Conteúdo', n:'Ring Light de Mesa LED com Suporte para Celular', p:'R$29,99', link:'https://tiktok.com'},
- {b:'Estouro em Vendas', n:'Garrafa Térmica Digital Motivacional Inox 500ml', p:'R$22,50', link:'https://tiktok.com'},
- {b:'Sucesso Skincare', n:'Sérum Facial Vitamina C Anti-Idade Clareador', p:'R$39,90', link:'https://tiktok.com'},
- {b:'Favorito dos Vídeos', n:'Mini Caixa de Som Bluetooth Resistente À Água', p:'R$27,40', link:'https://tiktok.com'}
-];
-
-let plataforma = 'ml';
-let listaFiltradaGlobal = [];
-
-function setTab(p){
- plataforma = p;
- document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
- if(p==='ml') document.getElementById('tabML').classList.add('active');
- if(p==='shopee') document.getElementById('tabShopee').classList.add('active');
- if(p==='tiktok') document.getElementById('tabTikTok').classList.add('active');
- document.getElementById('busca').value = ''; 
- render();
+function salvar(){
+ mlid=document.getElementById('mlid').value;
+ shopeeid=document.getElementById('shopeeid').value;
+ tiktokid=document.getElementById('tiktokid').value;
+ localStorage.setItem('mlid',mlid);localStorage.setItem('shopeeid',shopeeid);localStorage.setItem('tiktokid',tiktokid);
+ alert('IDs salvos! Agora o botão copiar já vai com sua comissão'); render();
 }
 
-function buildLinkFinal(pr){
- let sep = pr.link.includes('?') ? '&' : '?';
- if(plataforma==='ml') {
-   return pr.link.includes('af_id=') ? pr.link : pr.link + sep + 'af_id=' + ML_AF_ID;
- }
- if(plataforma==='shopee') {
-   return pr.link; // URLs s.shopee já mapeiam a comissão estrutural do link encurtado
- }
- if(plataforma==='tiktok') {
-   return pr.link.includes('affiliate_id=') ? pr.link : pr.link + sep + 'affiliate_id=' + TIKTOK_ID;
- }
- return pr.link;
+const PRODUTOS = {
+ ml: [
+  {rank:'#1 TOP',sales:'+50k',rating:'4.9★',comm:'Alta',nome:'Omo Líquido 5L - Lavagem Perfeita',preco:'R$60,22',linkBase:'https://www.mercadolivre.com.br/omo-liquido-lavagem-perfeita-5l'},
+  {rank:'#2 TOP',sales:'+10k',rating:'4.9★',comm:'Alta',nome:'Kit 10 Meias Mash Original',preco:'R$43,99',linkBase:'https://www.mercadolivre.com.br/meias-mash-kit-10-pares'},
+  {rank:'#3 TOP',sales:'+22k',rating:'4.8★',comm:'Alta',nome:'Fone Bluetooth 80H Bateria',preco:'R$35,99',linkBase:'https://www.mercadolivre.com.br/fone-bluetooth-80h'}
+ ],
+ shopee: [
+  {rank:'#1 TOP',sales:'+69k',rating:'4.9★',comm:'20%',nome:'Fone TWS com Estojo - Alta Comissão',preco:'R$29,90',linkBase:'https://s.shopee.com.br/6L5a0yKW4X'},
+  {rank:'#2 TOP',sales:'+28k',rating:'4.9★',comm:'18%',nome:'Kit Principia Glow - Top Beleza',preco:'R$149,00',linkBase:'https://s.shopee.com.br/7fL5a0yKW4X'}
+ ],
+ tiktok: [
+  {rank:'#1 VIRAL',sales:'+15k',rating:'4.8★',comm:'15%',nome:'Mini Projetor Portátil - Viral TikTok',preco:'R$129,90',linkBase:'https://vt.tiktok.com/ZS...'},
+  {rank:'#2 VIRAL',sales:'+9k',rating:'4.9★',comm:'22%',nome:'Escova Secadora 5 em 1',preco:'R$89,90',linkBase:'https://vt.tiktok.com/ZS...'}
+ ]
+};
+
+let plat='ml';
+function setTab(p){plat=p;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('t'+(p==='ml'?'ML':p.charAt(0).toUpperCase()+p.slice(1))).classList.add('active');render();}
+
+function converterLink(prod){
+ if(plat==='ml'){return prod.linkBase + (prod.linkBase.includes('?')?'&':'?') + 'af_id=' + mlid;}
+ if(plat==='shopee'){return prod.linkBase;}
+ if(plat==='tiktok'){if(!tiktokid){return prod.linkBase;} return prod.linkBase + (prod.linkBase.includes('?')?'&':'?') + 'affiliate_id=' + tiktokid;}
 }
 
 function render(){
- let lista = plataforma==='ml' ? PRODUTOS_ML : (plataforma==='shopee' ? PRODUTOS_SHOPEE : PRODUTOS_TIKTOK);
- let termoBusca = document.getElementById('busca').value.toLowerCase();
- 
- listaFiltradaGlobal = lista.filter(pr => pr.n.toLowerCase().includes(termoBusca));
- 
- let html='';
- 
- if(listaFiltradaGlobal.length === 0){
-   html = '<div style="text-align:center;color:#666;padding:20px;">Nenhum produto encontrado.</div>';
- } else {
-   listaFiltradaGlobal.forEach((pr, i)=>{
-     let finalLink = buildLinkFinal(pr);
-     let tagExibicao = plataforma==='ml' ? ML_AF_ID : (plataforma==='shopee' ? SHOPEE_ID : TIKTOK_ID);
-     
-     html+=`<div class="card">
-     <span class="badge">${pr.b}</span><br>
-     <b>${pr.n}</b><br>
-     <span class="price">${pr.p}</span><br>
-     <small>${finalLink}</small><br>
-     <button class="btn" onclick="copiar('${finalLink}')">📋 COPIAR LINK ${plataforma.toUpperCase()} - ${tagExibicao}</button>
-     <button class="btn2" id="btnZap-${plataforma}-${i}">📱 TEXTO ZAP</button>
-     </div>`;
-   });
- }
+ let html=''; PRODUTOS[plat].forEach(p=>{
+  let finalLink = converterLink(p);
+  let textoZap = `🔥 ${p.nome} - ${p.preco}\n${p.rank} | ${p.sales} vendas | ${p.rating}\n👉 ${finalLink}`;
+  html+=`<div class="card"><span class="badge">${p.rank} | ${p.sales} | ${p.rating} | Comissão: ${p.comm}</span><br><b>${p.nome}</b><br><span class="price">${p.preco}</span><br><small>${finalLink}</small><br>
+  <button class="btn ${plat==='ml'?'btn-ml':plat==='shopee'?'btn-shopee':'btn-tiktok'}" onclick="navigator.clipboard.writeText('${finalLink}').then(()=>alert('LINK COM SUA COMISSÃO COPIADO:\\n'+finalLink))">📋 COPIAR LINK COM MINHA COMISSÃO (${plat==='ml'?mlid:plat==='shopee'?shopeeid:tiktokid||'ID'})</button>
+  <button class="btn" style="background:#25D366;color:#fff" onclick="navigator.clipboard.writeText(\`${textoZap}\`).then(()=>alert('TEXTO ZAP COPIADO'))">📱 COPIAR TEXTO ZAP</button>
+  </div>`;
+ });
  document.getElementById('lista').innerHTML=html;
-
- // Associa dinamicamente as strings de envio do WhatsApp protegendo o código contra quebras
- listaFiltradaGlobal.forEach((pr, i) => {
-   let btnZap = document.getElementById(`btnZap-${plataforma}-${i}`);
-   if(btnZap) {
-     let finalLink = buildLinkFinal(pr);
-     let textoZap = `🔥 *${pr.n}*\n💰 Por apenas: *${pr.p}*\n\n👉 Compre aqui: ${finalLink}\n\n✅ Produto verificado de alta avaliação!`;
-     btnZap.onclick = function() {
-       copiarTexto(textoZap, 'Texto Zap copiado!');
-     };
-   }
- });
 }
-
-function copiar(link){
- copiarTexto(link, 'COPIADO: '+link);
-}
-
-function copiarTexto(texto, mensagem) {
- navigator.clipboard.writeText(texto).then(() => {
-   alert(mensagem);
- }).catch(() => {
-   let textArea = document.createElement("textarea");
-   textArea.value = texto;
-   document.body.appendChild(textArea);
-   textArea.select();
-   document.execCommand('copy');
-   document.body.removeChild(textArea);
-   alert(mensagem);
- });
-}
-
 render();
 </script>
 </body>
