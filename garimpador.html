@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Garimpador Guto - FINAL REAL</title>
+<title>Garimpador Guto - FINAL v4</title>
 <style>
 *{box-sizing:border-box;font-family:Arial}
 body{background:#FFF6F3;margin:0;padding:10px}
@@ -24,9 +24,9 @@ input{width:100%;padding:11px;border:1px solid #ddd;border-radius:8px;margin:5px
 </head>
 <body>
 <div class="top">
-<h2 style="margin:0">🤖 GARIMPADOR GUTO - PRODUTO REAL</h2>
+<h2 style="margin:0">🤖 GARIMPADOR GUTO - v4 FIX</h2>
 <small>Shopee:6L5a0yKW4X | ML:af_id=1HnqVKT | TikTok</small>
-<div id="status" class="status">✅ Carregando produtos REAIS...</div>
+<div id="status" class="status">✅ Iniciando...</div>
 </div>
 <div class="tabs">
 <div class="tab active" id="tShopee" onclick="setTab('shopee')">🟠 Shopee</div>
@@ -49,45 +49,101 @@ input{width:100%;padding:11px;border:1px solid #ddd;border-radius:8px;margin:5px
 const MEUS_LINKS={shopee:'https://s.shopee.com.br/6L5a0yKW4X',ml:'https://meli.la/2DVBaXN',tiktok:'https://vt.tiktok.com/ZS9yDN7wwowDD-Hikwu/'};
 const ML_AF_ID='1HnqVKT';
 let plataforma='shopee';
-let cacheProdutos=JSON.parse(localStorage.getItem('garimpo_guto_final_v3')||'{}');
+let cacheProdutos=JSON.parse(localStorage.getItem('garimpo_guto_v4')||'{}');
+
 async function garimparAuto(){
  if(!cacheProdutos.ml || cacheProdutos.ml.length==0){
-   cacheProdutos.shopee=[{b:'+69k| -60%|4.9★',n:'Fone TWS Pro',p:'R$29,90',d:'+69k vendas',link:'https://s.shopee.com.br/6L5a0yKW4X'}];
-   cacheProdutos.tiktok=[{b:'+28k|4.9★',n:'Principia Kit Glow',p:'R$149',d:'Beleza Top',link:MEUS_LINKS.tiktok}];
-   cacheProdutos.ml=[];
+   cacheProdutos.shopee=[
+     {b:'+69k| -60%|4.9★',n:'Fone TWS Pro',p:'R$29,90',d:'+69k vendas',link:'https://s.shopee.com.br/6L5a0yKW4X'},
+     {b:'+11M|4.9★',n:'Jogo Lençol 400 fios',p:'R$49,90',d:'TOP 1',link:'https://s.shopee.com.br/6L5a0yKW4X'}
+   ];
+   cacheProdutos.tiktok=[
+     {b:'+28k|4.9★',n:'Principia Kit Glow',p:'R$149',d:'Beleza Top',link:MEUS_LINKS.tiktok}
+   ];
+   cacheProdutos.ml=[
+     {b:'Carregando...',n:'Buscando Omo Líquido 5L',p:'R$...',d:'Aguarde API',link:'https://www.mercadolivre.com.br/omo-liquido-5l'}
+   ];
+   render();
    await tryMLBackground();
- } else { render(); tryMLBackground(); }
+ } else {
+   render();
+   tryMLBackground();
+ }
 }
+
 async function tryMLBackground(){
  try{
-  document.getElementById('status').innerText='🔍 Buscando produtos REAIS na ML...';
-  let termos=['Omo Liquido 5L','Kit 10 Meias Mash','Power Bank Basike 20000','Fone TWS','Tênis Kappa'];
+  document.getElementById('status').innerText='🔍 Buscando 5 produtos REAIS na ML...';
+  let termos=['Omo Liquido 5L','Kit 10 Meias Mash','Power Bank Basike 20000','Fone TWS 80H','Tênis Kappa'];
   let listaFinal=[];
   for(let t of termos){
     try{
       let r=await fetch('https://api.mercadolibre.com/sites/MLB/search?q='+encodeURIComponent(t)+'&limit=1');
       let j=await r.json();
-      if(j.results && j.results[0]){
+      if(j.results && j.results.length>0){
         let it=j.results[0];
         listaFinal.push({b:'+'+it.sold_quantity+' vendas|4.9★|Verif|FULL',n:it.title.slice(0,55),p:'R$'+it.price,d:'PRODUTO REAL - API',link:it.permalink});
       }
-    }catch(e){}
+    }catch(e){console.log('erro',t,e)}
   }
   if(listaFinal.length>0){
     cacheProdutos.ml=listaFinal;
-    localStorage.setItem('garimpo_guto_final_v3',JSON.stringify(cacheProdutos));
+    localStorage.setItem('garimpo_guto_v4',JSON.stringify(cacheProdutos));
     if(plataforma==='ml') render();
-    document.getElementById('status').innerText='✅ '+listaFinal.length+' produtos ML REAIS - link específico';
+    document.getElementById('status').innerText='✅ '+listaFinal.length+' produtos ML REAIS carregados';
+  } else {
+    document.getElementById('status').innerText='⚠️ API bloqueou, usando reserva';
   }
- }catch(e){ document.getElementById('status').innerText='⚠️ Erro API'; }
+ }catch(e){
+  document.getElementById('status').innerText='⚠️ Erro: '+e.message;
+ }
 }
-function setTab(p){plataforma=p;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('t'+(p==='shopee'?'Shopee':p==='ml'?'ML':'Tik')).classList.add('active');render();}
-function render(){let lista=cacheProdutos[plataforma]||[];let html='';lista.forEach((pr,i)=>{html+=`<div class="card"><span class="badge">${pr.b}</span><br><b>${pr.n}</b><br><small>${pr.d}</small><br><span class="price">${pr.p}</span><br><button class="btn" onclick="copiarProduto(${i})">📋 COPIAR COM MEU LINK ${plataforma.toUpperCase()}</button><button class="btn2" onclick="copiarZapProduto(${i})">📱 TEXTO ZAP</button></div>`;});document.getElementById('lista').innerHTML=html;}
-function buildAfiliadoML(linkReal){if(!linkReal) return MEUS_LINKS.ml; if(linkReal.includes('af_id=')) return linkReal; let sep=linkReal.includes('?')?'&':'?'; return linkReal+sep+'af_id='+ML_AF_ID;}
-function copiarProduto(i){let pr=cacheProdutos[plataforma][i];let linkFinal='';if(plataforma==='ml'){linkFinal=buildAfiliadoML(pr.link);}else{linkFinal=pr.link;}mostrar(linkFinal,'🔥 '+pr.n+' por '+pr.p+' - '+pr.b);}
+
+function setTab(p){
+ plataforma=p;
+ document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+ document.getElementById('t'+(p==='shopee'?'Shopee':p==='ml'?'ML':'Tik')).classList.add('active');
+ render();
+}
+
+function render(){
+ let lista=cacheProdutos[plataforma]||[];
+ let html='';
+ lista.forEach((pr,i)=>{
+  html+=`<div class="card"><span class="badge">${pr.b}</span><br><b>${pr.n}</b><br><small>${pr.d}</small><br><span class="price">${pr.p}</span><br><button class="btn" onclick="copiarProduto(${i})">📋 COPIAR COM MEU LINK ${plataforma.toUpperCase()}</button><button class="btn2" onclick="copiarZapProduto(${i})">📱 TEXTO ZAP</button></div>`;
+ });
+ document.getElementById('lista').innerHTML=html;
+}
+
+function buildAfiliadoML(linkReal){
+ if(!linkReal) return MEUS_LINKS.ml;
+ if(linkReal.includes('af_id=')) return linkReal;
+ let sep=linkReal.includes('?')?'&':'?';
+ return linkReal+sep+'af_id='+ML_AF_ID;
+}
+
+function copiarProduto(i){
+ let pr=cacheProdutos[plataforma][i];
+ let linkFinal= (plataforma==='ml') ? buildAfiliadoML(pr.link) : pr.link;
+ mostrar(linkFinal,'🔥 '+pr.n+' por '+pr.p+' - '+pr.b);
+}
 function copiarZapProduto(i){copiarProduto(i); setTimeout(copyZap,300);}
-function gerarManual(){let url=document.getElementById('prod').value.trim();if(!url){alert('Cole link');return;}let final=url;if(url.includes('mercadolivre')||url.includes('mercadolibre')||url.includes('meli.la')){final=buildAfiliadoML(url);}else{final=url;}mostrar(final,'🔥 MANUAL');}
-function mostrar(link,titulo){document.getElementById('result').classList.remove('hide');document.getElementById('out').value=link;let texto=titulo+"\n\n👉 "+link+"\n\n✅ REQ: +1k vendas | 4.8★ | Verificada";document.getElementById('zaptext').innerText=texto;window._zap=texto;}
+function gerarManual(){
+ let url=document.getElementById('prod').value.trim();
+ if(!url){alert('Cole link');return;}
+ let final=url;
+ if(url.includes('mercadolivre')||url.includes('mercadolibre')||url.includes('meli.la')){
+   final=buildAfiliadoML(url);
+ }
+ mostrar(final,'🔥 MANUAL');
+}
+function mostrar(link,titulo){
+ document.getElementById('result').classList.remove('hide');
+ document.getElementById('out').value=link;
+ let texto=titulo+"\n\n👉 "+link+"\n\n✅ REQ: +1k vendas | 4.8★ | Verificada";
+ document.getElementById('zaptext').innerText=texto;
+ window._zap=texto;
+}
 function copyLink(){let el=document.getElementById('out');el.select();document.execCommand('copy');alert('COPIADO '+plataforma.toUpperCase());}
 function copyZap(){navigator.clipboard.writeText(window._zap);alert('Texto Zap copiado!');}
 garimparAuto();
