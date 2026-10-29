@@ -44,25 +44,26 @@ const SHOPEE_ID = '6L5a0yKW4X'; // Shopee já certo
 // =============================================
 
 const PRODUTOS_ML = [
- {b:'+50k vendas | 4.9★', n:'Sabão Líquido Omo Lavagem Perfeita 5L', p:'R$60,22', link:'https://www.mercadolivre.com.br/omo-liquido-5l'},
- {b:'+10k vendas | 4.9★', n:'Kit 10 Meias Mash Masculina Original', p:'R$43,99', link:'https://www.mercadolivre.com.br/meias-mash-masculina-kit-10'},
- {b:'+22k | 4.8★', n:'Fone Bluetooth 80H Bateria', p:'R$35,99', link:'https://www.mercadolivre.com.br/fone-bluetooth-80h'},
- {b:'+5k | 4.9★', n:'Tênis Kappa Masculino Original', p:'R$96,41', link:'https://www.mercadolivre.com.br/tenis-kappa-masculino'},
- {b:'+20k | 4.8★', n:'Power Bank Basike 20000mAh', p:'R$79,90', link:'https://www.mercadolivre.com.br/power-bank-20000mah-basike'}
+ {b:'+50k vendas | 4.9★', n:'Sabão Líquido Omo Lavagem Perfeita 5L', p:'R$60,22', link:'https://mercadolivre.com.br'},
+ {b:'+10k vendas | 4.9★', n:'Kit 10 Meias Mash Masculina Original', p:'R$43,99', link:'https://mercadolivre.com.br'},
+ {b:'+22k | 4.8★', n:'Fone Bluetooth 80H Bateria', p:'R$35,99', link:'https://mercadolivre.com.br'},
+ {b:'+5k | 4.9★', n:'Tênis Kappa Masculino Original', p:'R$96,41', link:'https://mercadolivre.com.br'},
+ {b:'+20k | 4.8★', n:'Power Bank Basike 20000mAh', p:'R$79,90', link:'https://mercadolivre.com.br'}
 ];
 
 const PRODUTOS_SHOPEE = [
- {b:'+69k vendas | -60%', n:'Fone TWS Pro com Estojo', p:'R$29,90', link:'https://s.shopee.com.br/6L5a0yKW4X'},
- {b:'+28k | 4.9★', n:'Principia Kit Glow', p:'R$149,00', link:'https://s.shopee.com.br/7fL5a0yKW4X'}
+ {b:'+69k vendas | -60%', n:'Fone TWS Pro com Estojo', p:'R$29,90', link:'https://shopee.com.br'},
+ {b:'+28k | 4.9★', n:'Principia Kit Glow', p:'R$149,00', link:'https://shopee.com.br'}
 ];
 
 let plataforma = 'ml';
+let listaFiltradaGlobal = []; // Guarda os itens filtrados para o clique do botão funcionar certo
 
 function setTab(p){
  plataforma = p;
  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
  document.getElementById(p==='ml'?'tabML':'tabShopee').classList.add('active');
- document.getElementById('busca').value = ''; // Limpa a busca ao trocar de aba
+ document.getElementById('busca').value = ''; 
  render();
 }
 
@@ -76,24 +77,23 @@ function render(){
  let lista = plataforma==='ml' ? PRODUTOS_ML : PRODUTOS_SHOPEE;
  let termoBusca = document.getElementById('busca').value.toLowerCase();
  
- // Filtra a lista com base no termo digitado
- let listaFiltrada = lista.filter(pr => pr.n.toLowerCase().includes(termoBusca));
+ // Atualiza a lista filtrada globalmente baseada na busca
+ listaFiltradaGlobal = lista.filter(pr => pr.n.toLowerCase().includes(termoBusca));
  
  let html='';
  
- if(listaFiltrada.length === 0){
+ if(listaFiltradaGlobal.length === 0){
    html = '<div style="text-align:center;color:#666;padding:20px;">Nenhum produto encontrado.</div>';
  } else {
-   listaFiltrada.forEach((pr,i)=>{
+   listaFiltradaGlobal.forEach((pr, i)=>{
      let finalLink = plataforma==='ml' ? buildLinkML(pr.link) : pr.link;
-     let textoZap = `🔥 ${pr.n} por ${pr.p}\n\n👉 ${finalLink}\n\n✅ Produto específico`;
      html+=`<div class="card">
      <span class="badge">${pr.b}</span><br>
      <b>${pr.n}</b><br>
      <span class="price">${pr.p}</span><br>
      <small>${finalLink}</small><br>
      <button class="btn" onclick="copiar('${finalLink}')">📋 COPIAR LINK ${plataforma.toUpperCase()} - ${plataforma==='ml'?ML_AF_ID:SHOPEE_ID}</button>
-     <button class="btn2" onclick="copiarZap(\`${textoZap}\`)">📱 TEXTO ZAP</button>
+     <button class="btn2" onclick="copiarZap(${i})">📱 TEXTO ZAP</button>
      </div>`;
    });
  }
@@ -104,8 +104,14 @@ function copiar(link){
  navigator.clipboard.writeText(link);
  alert('COPIADO: '+link);
 }
-function copiarZap(texto){
- navigator.clipboard.writeText(texto);
+
+function copiarZap(index){
+ // Resgata o item correto de forma segura utilizando o índice numérico
+ let pr = listaFiltradaGlobal[index];
+ let finalLink = plataforma==='ml' ? buildLinkML(pr.link) : pr.link;
+ let textoZap = `🔥 ${pr.n} por ${pr.p}\n\n👉 ${finalLink}\n\n✅ Produto específico`;
+ 
+ navigator.clipboard.writeText(textoZap);
  alert('Texto Zap copiado!');
 }
 
