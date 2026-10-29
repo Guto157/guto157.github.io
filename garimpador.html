@@ -1,34 +1,114 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Garimpador Guto v6</title>
-<style>*{box-sizing:border-box;font-family:Arial}body{background:#FFF6F3;margin:0;padding:10px}.top{background:linear-gradient(90deg,#ee4d2d,#ff7337);color:#fff;padding:14px;border-radius:12px;text-align:center}.tab{flex:1;padding:10px;border-radius:8px;border:1px solid #ddd;background:#fff;font-weight:bold;cursor:pointer;text-align:center}.tab.active{background:#ee4d2d;color:#fff}.tabs{display:flex;gap:6px;margin:10px 0}.box{background:#fff;border-radius:12px;padding:12px;border:1px solid #eee}input{width:100%;padding:11px;border:1px solid #ddd;border-radius:8px;margin:5px 0}.btn{background:#ee4d2d;color:#fff;border:0;padding:12px;border-radius:8px;width:100%;font-weight:bold;margin-top:6px;cursor:pointer}.btn2{background:#25D366;color:#fff;border:0;padding:11px;border-radius:8px;width:100%;font-weight:bold;margin-top:6px;cursor:pointer}.card{background:#fff;border-radius:12px;padding:12px;margin:10px 0;border:1px solid #eee}.badge{background:#ffe9e3;color:#ee4d2d;padding:3px 7px;border-radius:4px;font-size:11px;font-weight:bold}.price{color:#ee4d2d;font-weight:bold}.hide{display:none}.status{background:#e8f5e9;color:#2e7d32;padding:8px;border-radius:8px;font-size:12px;margin:8px 0;text-align:center}</style>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garimpador Guto v7 FINAL</title>
+<style>
+*{box-sizing:border-box;font-family:Arial, sans-serif}
+body{background:#FFF6F3;margin:0;padding:10px}
+.top{background:linear-gradient(90deg,#ffe600,#ffcc00);color:#000;padding:14px;border-radius:12px;text-align:center;font-weight:bold}
+.tabs{display:flex;gap:6px;margin:12px 0 6px 0}
+.tab{flex:1;padding:12px;border-radius:8px;border:1px solid #ddd;background:#fff;font-weight:bold;cursor:pointer;text-align:center}
+.tab.active{background:#ee4d2d;color:#fff;border-color:#ee4d2d}
+.search-container{margin-bottom:12px}
+.search-input{width:100%;padding:12px;border-radius:8px;border:1px solid #ddd;font-size:15px;outline:none}
+.search-input:focus{border-color:#ee4d2d}
+.card{background:#fff;border-radius:12px;padding:12px;margin:10px 0;border:1px solid #eee}
+.badge{background:#ffe9e3;color:#ee4d2d;padding:3px 7px;border-radius:4px;font-size:11px;font-weight:bold}
+.price{color:#ee4d2d;font-weight:bold;font-size:16px}
+.btn{background:#ee4d2d;color:#fff;border:0;padding:12px;border-radius:8px;width:100%;font-weight:bold;margin-top:6px;cursor:pointer}
+.btn2{background:#25D366;color:#fff;border:0;padding:11px;border-radius:8px;width:100%;font-weight:bold;margin-top:6px;cursor:pointer}
+small{word-break:break-all}
+</style>
 </head>
 <body>
-<div class="top"><h2>🤖 GARIMPADOR GUTO v6 - FUNCIONA</h2><small>af_id=1HnqVKT | SEM ID FALSO</small><div class="status">✅ Links que nunca dão indisponível</div></div>
-<div class="tabs"><div class="tab active" id="tShopee" onclick="setTab('shopee')">🟠 Shopee</div><div class="tab" id="tML" onclick="setTab('ml')">🟡 ML</div><div class="tab" id="tTik" onclick="setTab('tiktok')">⚫ TikTok</div></div>
-<div class="box"><b>Cole link REAL do produto:</b><input id="prod" placeholder="Cole aqui o link do ML que você copiou..."><button class="btn" onclick="gerarManual()">GERAR COM MEU ID af_id</button><div id="result" class="hide"><input id="out" readonly><button class="btn" onclick="copyLink()">📋 COPIAR LINK</button><button class="btn2" onclick="copyZap()">📱 TEXTO ZAP</button><p id="zaptext" style="font-size:13px;background:#f5f5f5;padding:8px;border-radius:8px;white-space:pre-wrap"></p></div></div>
+
+<div class="top">🤖 GARIMPADOR GUTO v7 FINAL<br><small>ID CORRETO: 2DVBaXN | Shopee separada</small></div>
+
+<div class="tabs">
+<div class="tab active" id="tabML" onclick="setTab('ml')">🟡 ML</div>
+<div class="tab" id="tabShopee" onclick="setTab('shopee')">🟠 Shopee</div>
+</div>
+
+<div class="search-container">
+<input type="text" id="busca" class="search-input" placeholder="🔍 Buscar produto pelo nome..." oninput="render()">
+</div>
+
 <div id="lista"></div>
+
 <script>
-const ML_AF_ID='1HnqVKT';
-// LINKS REAIS QUE NÃO QUEBRAM - BUSCA DIRECIONADA
-const PRODUTOS_ML=[
- {b:'+50k vendas|4.9★',n:'Sabão Líquido Omo Lavagem Perfeita 5L',p:'R$60,22',d:'Mais vendido',link:'https://www.mercadolivre.com.br/omo-liquido-5l'},
- {b:'+10k vendas|4.9★',n:'Kit 10 Meias Mash Masculina Original',p:'R$43,99',d:'Original',link:'https://www.mercadolivre.com.br/meias-mash-masculina-kit-10'},
- {b:'+20k|4.8★',n:'Power Bank Basike 20000mAh Turbo',p:'R$79,90',d:'Carregamento rápido',link:'https://www.mercadolivre.com.br/power-bank-20000mah-basike'},
- {b:'+22k|4.8★',n:'Fone Bluetooth 80H Bateria',p:'R$35,99',d:'Eletrônicos',link:'https://www.mercadolivre.com.br/fone-bluetooth-80h'},
- {b:'+5k|4.9★',n:'Tênis Kappa Masculino Original',p:'R$96,41',d:'Moda',link:'https://www.mercadolivre.com.br/tenis-kappa-masculino'}
+// ========= EDITA SÓ AQUI SE PRECISAR =========
+const ML_AF_ID = '2DVBaXN'; // SEU ID VERDADEIRO ML
+const SHOPEE_ID = '6L5a0yKW4X'; // Shopee já certo
+// =============================================
+
+const PRODUTOS_ML = [
+ {b:'+50k vendas | 4.9★', n:'Sabão Líquido Omo Lavagem Perfeita 5L', p:'R$60,22', link:'https://www.mercadolivre.com.br/omo-liquido-5l'},
+ {b:'+10k vendas | 4.9★', n:'Kit 10 Meias Mash Masculina Original', p:'R$43,99', link:'https://www.mercadolivre.com.br/meias-mash-masculina-kit-10'},
+ {b:'+22k | 4.8★', n:'Fone Bluetooth 80H Bateria', p:'R$35,99', link:'https://www.mercadolivre.com.br/fone-bluetooth-80h'},
+ {b:'+5k | 4.9★', n:'Tênis Kappa Masculino Original', p:'R$96,41', link:'https://www.mercadolivre.com.br/tenis-kappa-masculino'},
+ {b:'+20k | 4.8★', n:'Power Bank Basike 20000mAh', p:'R$79,90', link:'https://www.mercadolivre.com.br/power-bank-20000mah-basike'}
 ];
-let plataforma='shopee';
-let cacheProdutos={shopee:[{b:'+69k| -60%',n:'Fone TWS Pro',p:'R$29,90',d:'+69k vendas',link:'https://s.shopee.com.br/6L5a0yKW4X'}],ml:PRODUTOS_ML,tiktok:[{b:'+28k|4.9★',n:'Principia Kit Glow',p:'R$149',d:'Beleza',link:'https://vt.tiktok.com/ZS9yDN7wwowDD-Hikwu/'}]};
-function setTab(p){plataforma=p;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('t'+(p==='shopee'?'Shopee':p==='ml'?'ML':'Tik')).classList.add('active');render();}
-function render(){let lista=cacheProdutos[plataforma]||[];let html='';lista.forEach((pr,i)=>{html+=`<div class="card"><span class="badge">${pr.b}</span><br><b>${pr.n}</b><br><small>${pr.d}</small><br><span class="price">${pr.p}</span><br><button class="btn" onclick="copiarProduto(${i})">📋 COPIAR COM MEU LINK ${plataforma.toUpperCase()}</button><button class="btn2" onclick="copiarZapProduto(${i})">📱 TEXTO ZAP</button></div>`});document.getElementById('lista').innerHTML=html;}
-function buildAfiliadoML(linkReal){if(linkReal.includes('af_id=')) return linkReal;let sep=linkReal.includes('?')?'&':'?';return linkReal+sep+'af_id='+ML_AF_ID;}
-function copiarProduto(i){let pr=cacheProdutos[plataforma][i];let linkFinal=(plataforma==='ml')?buildAfiliadoML(pr.link):pr.link;mostrar(linkFinal,'🔥 '+pr.n+' por '+pr.p);}
-function copiarZapProduto(i){copiarProduto(i);setTimeout(copyZap,250);}
-function gerarManual(){let url=document.getElementById('prod').value.trim();if(!url){alert('Cole o link REAL da ML');return;}let final=url.includes('mercadolivre')||url.includes('meli.la')?buildAfiliadoML(url):url;mostrar(final,'🔥 MANUAL - PRODUTO ESPECÍFICO');}
-function mostrar(link,titulo){document.getElementById('result').classList.remove('hide');document.getElementById('out').value=link;let texto=titulo+"\n\n👉 "+link+"\n\n✅ Produto específico com sua comissão";document.getElementById('zaptext').innerText=texto;window._zap=texto;}
-function copyLink(){let el=document.getElementById('out');el.select();document.execCommand('copy');alert('COPIADO '+plataforma.toUpperCase());}
-function copyZap(){navigator.clipboard.writeText(window._zap);alert('Texto Zap copiado!');}
+
+const PRODUTOS_SHOPEE = [
+ {b:'+69k vendas | -60%', n:'Fone TWS Pro com Estojo', p:'R$29,90', link:'https://s.shopee.com.br/6L5a0yKW4X'},
+ {b:'+28k | 4.9★', n:'Principia Kit Glow', p:'R$149,00', link:'https://s.shopee.com.br/7fL5a0yKW4X'}
+];
+
+let plataforma = 'ml';
+
+function setTab(p){
+ plataforma = p;
+ document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+ document.getElementById(p==='ml'?'tabML':'tabShopee').classList.add('active');
+ document.getElementById('busca').value = ''; // Limpa a busca ao trocar de aba
+ render();
+}
+
+function buildLinkML(linkBase){
+ if(linkBase.includes('af_id=')) return linkBase;
+ let sep = linkBase.includes('?') ? '&' : '?';
+ return linkBase + sep + 'af_id=' + ML_AF_ID;
+}
+
+function render(){
+ let lista = plataforma==='ml' ? PRODUTOS_ML : PRODUTOS_SHOPEE;
+ let termoBusca = document.getElementById('busca').value.toLowerCase();
+ 
+ // Filtra a lista com base no termo digitado
+ let listaFiltrada = lista.filter(pr => pr.n.toLowerCase().includes(termoBusca));
+ 
+ let html='';
+ 
+ if(listaFiltrada.length === 0){
+   html = '<div style="text-align:center;color:#666;padding:20px;">Nenhum produto encontrado.</div>';
+ } else {
+   listaFiltrada.forEach((pr,i)=>{
+     let finalLink = plataforma==='ml' ? buildLinkML(pr.link) : pr.link;
+     let textoZap = `🔥 ${pr.n} por ${pr.p}\n\n👉 ${finalLink}\n\n✅ Produto específico`;
+     html+=`<div class="card">
+     <span class="badge">${pr.b}</span><br>
+     <b>${pr.n}</b><br>
+     <span class="price">${pr.p}</span><br>
+     <small>${finalLink}</small><br>
+     <button class="btn" onclick="copiar('${finalLink}')">📋 COPIAR LINK ${plataforma.toUpperCase()} - ${plataforma==='ml'?ML_AF_ID:SHOPEE_ID}</button>
+     <button class="btn2" onclick="copiarZap(\`${textoZap}\`)">📱 TEXTO ZAP</button>
+     </div>`;
+   });
+ }
+ document.getElementById('lista').innerHTML=html;
+}
+
+function copiar(link){
+ navigator.clipboard.writeText(link);
+ alert('COPIADO: '+link);
+}
+function copiarZap(texto){
+ navigator.clipboard.writeText(texto);
+ alert('Texto Zap copiado!');
+}
+
 render();
 </script>
 </body>
